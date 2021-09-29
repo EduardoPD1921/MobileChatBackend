@@ -1,9 +1,7 @@
 const app = require('./api/app');
 const http = require('http');
-const dotenv = require('dotenv');
-dotenv.config({
-  path: './config.env'
-});
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 
 const port = process.env.PORT || '8000';
 app.set('port', port);
