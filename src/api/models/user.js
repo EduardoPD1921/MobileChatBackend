@@ -6,6 +6,10 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 class User {
+  get getUserId() {
+    return this._id;
+  }
+
   set userName(userName) {
     this.name = userName;
   }
