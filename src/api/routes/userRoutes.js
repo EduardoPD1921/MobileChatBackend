@@ -3,5 +3,7 @@ const router = express.Router();
 const controller = require('../controllers/userController');
 
 router.post('/store', controller.store);
+router.get('/checkUniqueEmail/:email', controller.checkUniqueEmail);
+router.get('/checkUniquePhone/:phone', controller.checkUniquePhone);
 
 module.exports = router;

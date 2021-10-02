@@ -14,5 +14,16 @@ exports.store = async (req, res, _next) => {
   } catch(error) {
     res.status(400).send(error);
   }
-} 
+}; 
 
+exports.checkUniqueEmail = async (req, res, _next) => {
+  const duplicateValue = await User.checkUniqueEmail(req.params.email);
+
+  res.status(200).send(duplicateValue);
+};
+
+exports.checkUniquePhone = async (req, res, _next) => {
+  const duplicateValue = await User.checkUniquePhone(req.params.phone);
+
+  res.status(200).send(duplicateValue);
+};

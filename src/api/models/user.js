@@ -36,11 +36,24 @@ class User {
   }
 
   set userPhone(userPhone) {
-    this.phone = userPhone;
+    const unmaskedPhone = userPhone
+      .replace('(', '')
+      .replace(')', '')
+      .replace('-', '')
+      .replace(' ', '');
+    this.phone = unmaskedPhone;
   }
 
   get getUserPhone() {
     return this.phone;
+  }
+
+  static checkUniqueEmail(email) {
+    return this.exists({ email });
+  }
+
+  static checkUniquePhone(phone) {
+    return this.exists({ phone });
   }
 }
 
@@ -51,13 +64,14 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    lowercase: true,
     trim: true,
     unique: true,
     validate: [validator.isEmail, 'E-mail inválido.']
   },
   phone: {
     type: String,
-    unique: true,
+    unique: [true, 'Telefone já cadastrado.'],
     trim: true,
     required: [true, 'Insira um número.']
   },
