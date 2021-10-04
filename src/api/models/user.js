@@ -3,11 +3,10 @@ const bcrypt = require('bcrypt');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 
-class User {
-  get getUserId() {
-    return this._id;
-  }
+const JwtService = require('../services/JwtService');
+const HashService = require('../services/HashService');
 
+class User {
   set userName(userName) {
     this.name = userName;
   }
@@ -46,7 +45,7 @@ class User {
     return this.phone;
   }
 
-  static checkUniqueEmail(email) {
+  static checkEmailExists(email) {
     return this.exists({ email });
   }
 
@@ -59,11 +58,17 @@ class User {
     if (user) {
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (passwordCompare) {
-        return 'logado';
+        const token = JwtService.generateToken({
+          id: user._id.toString(),
+          email: user.email,
+          name: user.name,
+          phone: user.phone
+        });
+
+        return token;
       }
       throw new Error('wrong-password');
     }
-
     throw new Error('wrong-email');
   }
 }

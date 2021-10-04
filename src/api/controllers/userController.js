@@ -1,18 +1,16 @@
 const db = require('../db/connection');
 const User = db.model('User');
-const bcrypt = require('bcrypt');
-
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const HashService = require('../services/HashService');
 
 exports.store = async (req, res, _next) => {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.userPassword, parseInt(process.env.ENCRIPT_SALT_ROUNDS));
+    const hashedPassword = await HashService.generateHash(req.body.userPassword);
+
     const user = new User({
       userName: req.body.userName,
       userEmail: req.body.userEmail,
       userPhone: req.body.userPhone,
-      userPassword: hashedPassword
+      userPassword : hashedPassword
     });
     await user.save();
     res.status(201).send('user-created');
@@ -21,28 +19,35 @@ exports.store = async (req, res, _next) => {
   }
 }; 
 
-exports.checkUniqueEmail = async (req, res, _next) => {
-  const duplicateValue = await User.checkUniqueEmail(req.params.email);
-
-  res.status(200).send(duplicateValue);
+exports.checkEmailExists = async (req, res, _next) => {
+  try {
+    const duplicateValue = await User.checkEmailExists(req.params.email);
+    res.status(200).send(duplicateValue);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.checkUniquePhone = async (req, res, _next) => {
-  const unmaskedPhone = req.params.phone
-    .replace('(', '')
-    .replace(')', '')
-    .replace('-', '')
-    .replace(' ', '');
-
-  const duplicateValue = await User.checkUniquePhone(unmaskedPhone);
-
-  res.status(200).send(duplicateValue);
+  try {
+    const unmaskedPhone = req.params.phone
+      .replace('(', '')
+      .replace(')', '')
+      .replace('-', '')
+      .replace(' ', '');
+  
+    const duplicateValue = await User.checkUniquePhone(unmaskedPhone);
+    res.status(200).send(duplicateValue);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.tryAuth = async (req, res, _next) => {
   try {
-    const userAuth = await User.tryAuth(req.body.email, req.body.password); 
+    const userToken = await User.tryAuth(req.body.email, req.body.password);
+    console.log(userToken); 
   } catch(error) {
-
+    console.log(error);
   }
 };
