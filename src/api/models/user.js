@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const jwt = require('jsonwebtoken');
 
 class User {
   get getUserId() {
@@ -27,8 +25,7 @@ class User {
   }
 
   set userPassword(userPassword) {
-    const hashedPassword = bcrypt.hashSync(userPassword, parseInt(process.env.ENCRIPT_SALT_ROUNDS));
-    this.password = hashedPassword;
+    this.password = userPassword;
   }
 
   get getUserPassword() {
@@ -41,6 +38,7 @@ class User {
       .replace(')', '')
       .replace('-', '')
       .replace(' ', '');
+
     this.phone = unmaskedPhone;
   }
 
@@ -54,6 +52,19 @@ class User {
 
   static checkUniquePhone(phone) {
     return this.exists({ phone });
+  }
+
+  static async tryAuth(email, password) {
+    const user = await this.findOne({ email });
+    if (user) {
+      const passwordCompare = await bcrypt.compare(password, user.password);
+      if (passwordCompare) {
+        return 'logado';
+      }
+      throw new Error('wrong-password');
+    }
+
+    throw new Error('wrong-email');
   }
 }
 
