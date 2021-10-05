@@ -14,7 +14,7 @@ exports.store = async (req, res, _next) => {
     });
     await user.save();
     res.status(201).send('user-created');
-  } catch(error) {
+  } catch (error) {
     res.status(400).send(error);
   }
 }; 
@@ -46,8 +46,8 @@ exports.checkUniquePhone = async (req, res, _next) => {
 exports.tryAuth = async (req, res, _next) => {
   try {
     const userToken = await User.tryAuth(req.body.email, req.body.password);
-    console.log(userToken); 
-  } catch(error) {
-    console.log(error);
+    res.status(200).send({ message: 'user-authenticated', token: userToken }); 
+  } catch (error) {
+    res.status(400).send({ message: error.message });
   }
 };

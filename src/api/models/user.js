@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const validator = require('validator');
-const jwt = require('jsonwebtoken');
 
 const JwtService = require('../services/JwtService');
 const HashService = require('../services/HashService');
@@ -54,9 +52,17 @@ class User {
   }
 
   static async tryAuth(email, password) {
+    if (!email) {
+      throw new Error('email-required');
+    }
+
+    if (!password) {
+      throw new Error('password-required');
+    }
+
     const user = await this.findOne({ email });
     if (user) {
-      const passwordCompare = await bcrypt.compare(password, user.password);
+      const passwordCompare = await HashService.compareHash(password, user.password);
       if (passwordCompare) {
         const token = JwtService.generateToken({
           id: user._id.toString(),
