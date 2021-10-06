@@ -77,7 +77,7 @@ class User {
     }
     throw new Error('wrong-email');
   }
-}
+};
 
 const userSchema = new mongoose.Schema({
   name: {

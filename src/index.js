@@ -1,6 +1,8 @@
 const app = require('./api/app');
 const http = require('http');
 const path = require('path');
+const { Server } = require('socket.io');
+const handlers = require('./api/sockets/chatHandlers');
 require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 
 const port = process.env.PORT || '8000';
@@ -11,6 +13,14 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+const io = new Server(server);
+
+const onConnection = (socket) => {
+  handlers(io, socket);
+};
+
+io.on('connection', onConnection);
 
 function onError(error) {
   if (error.syscall !== 'string') {
