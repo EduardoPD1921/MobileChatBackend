@@ -51,3 +51,7 @@ exports.tryAuth = async (req, res, _next) => {
     res.status(400).send({ message: error.message });
   }
 };
+
+exports.searchUsers = (req, res, _next) => {
+  res.status(200).send('salve');
+};

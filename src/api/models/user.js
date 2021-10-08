@@ -77,6 +77,10 @@ class User {
     }
     throw new Error('wrong-email');
   }
+
+  // static searchUsers() {
+
+  // }
 };
 
 const userSchema = new mongoose.Schema({
