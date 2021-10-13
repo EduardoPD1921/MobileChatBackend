@@ -78,9 +78,20 @@ class User {
     throw new Error('wrong-email');
   }
 
-  // static searchUsers() {
+  static async searchUsers(regexParam) {
+    try {
+      const userDBSearch = await this.find({
+        $or: [
+          { name: regexParam },
+          { email: regexParam }
+        ]
+      }, '_id name email phone');
 
-  // }
+      return userDBSearch;
+    } catch (error) {
+      throw new Error('search-error');
+    }
+  }
 };
 
 const userSchema = new mongoose.Schema({

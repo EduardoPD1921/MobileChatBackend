@@ -7,6 +7,6 @@ router.post('/store', controller.store);
 router.get('/checkEmailExists/:email', controller.checkEmailExists);
 router.get('/checkUniquePhone/:phone', controller.checkUniquePhone);
 router.post('/tryAuth', controller.tryAuth);
-router.get('/searchUsers', authMiddleware, controller.searchUsers);
+router.get('/searchUsers/:userParams', authMiddleware, controller.searchUsers);
 
 module.exports = router;
