@@ -115,7 +115,47 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Insira uma senha.']
-  }
+  },
+  contacts: [{
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      unique: true,
+      trim: true,
+      required: true
+    },
+    phone: {
+      type: String,
+      unique: true,
+      trim: true,
+      required: true
+    }
+  }],
+  notifications: [{
+    date: {
+      type: Date,
+      default: Date.now,
+      required: true
+    },
+    notificationType: {
+      type: String,
+      enum: ['contactInvite', 'groupInvite'],
+      required: true
+    },
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
+  }]
 });
 
 userSchema.loadClass(User);
