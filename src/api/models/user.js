@@ -78,6 +78,15 @@ class User {
     throw new Error('wrong-email');
   }
 
+  static decodeAuthToken(authToken) {
+    try {
+      const userInfo = JwtService.decodeToken(authToken);
+      return userInfo;
+    } catch (error) {
+      throw new Error('invalid-token');
+    }
+  }
+
   static async searchUsers(regexParam) {
     try {
       const userDBSearch = await this.find({
@@ -85,7 +94,7 @@ class User {
           { name: regexParam },
           { email: regexParam }
         ]
-      }, '_id name email phone');
+      }, '_id name email phone notifications');
 
       return userDBSearch;
     } catch (error) {
