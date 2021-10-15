@@ -16,4 +16,13 @@ module.exports = class JwtService {
       throw new Error('invalid-token');
     }
   }
+
+  static decodeToken(token) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+      return decodedToken;
+    } catch (error) {
+      throw new Error('invalid-token');
+    }
+  }
 };

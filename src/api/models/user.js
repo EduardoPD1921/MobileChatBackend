@@ -92,6 +92,26 @@ class User {
       throw new Error('search-error');
     }
   }
+
+  static async sendContactInvite(tokenId, receiverId) {
+    try {
+      const decodedToken = JwtService.decodeToken(tokenId);
+
+      const query = await this.findByIdAndUpdate(receiverId, {
+        $addToSet: {
+          notifications: [{
+            notificationType: 'addContactInvite',
+            senderId: decodedToken.id,
+            receiverId: receiverId
+          }]
+        }
+      }, { returnOriginal: false });
+
+      console.log(query);
+    } catch (error) {
+      throw new Error('invite-error');
+    }
+  }
 };
 
 const userSchema = new mongoose.Schema({
@@ -147,10 +167,15 @@ const userSchema = new mongoose.Schema({
     },
     notificationType: {
       type: String,
-      enum: ['contactInvite', 'groupInvite'],
+      enum: ['addContactInvite', 'groupInvite'],
       required: true
     },
     senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true

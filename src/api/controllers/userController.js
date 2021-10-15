@@ -62,3 +62,14 @@ exports.searchUsers = async (req, res, _next) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+exports.sendAddContactInvite = async (req, res, _next) => {
+  try {
+    // console.log(req.body.receiverId);
+    await User.sendContactInvite(res.locals.token, req.body.receiverId);
+
+    res.status(200).send('boa');
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};

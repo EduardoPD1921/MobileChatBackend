@@ -8,5 +8,6 @@ router.get('/checkEmailExists/:email', controller.checkEmailExists);
 router.get('/checkUniquePhone/:phone', controller.checkUniquePhone);
 router.post('/tryAuth', controller.tryAuth);
 router.get('/searchUsers/:userParams', authMiddleware, controller.searchUsers);
+router.put('/sendContactInvite', authMiddleware, controller.sendAddContactInvite);
 
 module.exports = router;
