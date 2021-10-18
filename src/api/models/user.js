@@ -102,9 +102,9 @@ class User {
     }
   }
 
-  static async sendContactInvite(tokenId, receiverId) {
+  static async sendContactInvite(token, receiverId) {
     try {
-      const decodedToken = JwtService.decodeToken(tokenId);
+      const decodedToken = JwtService.decodeToken(token);
 
       const query = await this.findByIdAndUpdate(receiverId, {
         $addToSet: {
@@ -116,9 +116,23 @@ class User {
         }
       }, { returnOriginal: false });
 
-      console.log(query);
+      return query.notifications[query.notifications.length - 1];
     } catch (error) {
       throw new Error('invite-error');
+    }
+  }
+
+  static async cancelContactInvite(receiverId, senderToken) {
+    try {
+      const decodedToken = JwtService.decodeToken(senderToken);
+
+      const query = await this.findByIdAndUpdate(receiverId, {
+        $pull: { notifications: { senderId: decodedToken.id } }
+      }, { returnOriginal: false });
+
+      return query;
+    } catch (error) {
+      throw new Error('cancel-invite-error');
     }
   }
 };

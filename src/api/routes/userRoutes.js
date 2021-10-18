@@ -10,5 +10,6 @@ router.post('/tryAuth', controller.tryAuth);
 router.get('/decodeAuthToken', authMiddleware, controller.decodeAuthToken);
 router.get('/searchUsers/:userParams', authMiddleware, controller.searchUsers);
 router.put('/sendContactInvite', authMiddleware, controller.sendAddContactInvite);
+router.put('/cancelContactInvite', authMiddleware, controller.cancelAddContactInvite);
 
 module.exports = router;

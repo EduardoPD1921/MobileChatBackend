@@ -74,9 +74,17 @@ exports.decodeAuthToken = async (_req, res, _next) => {
 
 exports.sendAddContactInvite = async (req, res, _next) => {
   try {
-    await User.sendContactInvite(res.locals.token, req.body.receiverId);
+    const notification = await User.sendContactInvite(res.locals.token, req.body.receiverId);
+    res.status(200).send({ notification });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
 
-    res.status(200).send('boa');
+exports.cancelAddContactInvite = async (req, res, _next) => {
+  try {
+    const cancelInvite = await User.cancelContactInvite(req.body.receiverId, res.locals.token);
+    res.status(200).send(cancelInvite);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
