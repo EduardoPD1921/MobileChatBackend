@@ -64,27 +64,20 @@ class User {
     if (user) {
       const passwordCompare = await HashService.compareHash(password, user.password);
       if (passwordCompare) {
-        const token = JwtService.generateToken({
+        const userInfo = {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
           phone: user.phone
-        });
+        };
 
-        return token;
+        const token = JwtService.generateToken(userInfo);
+
+        return { token, userInfo };
       }
       throw new Error('wrong-password');
     }
     throw new Error('wrong-email');
-  }
-
-  static decodeAuthToken(authToken) {
-    try {
-      const userInfo = JwtService.decodeToken(authToken);
-      return userInfo;
-    } catch (error) {
-      throw new Error('invalid-token');
-    }
   }
 
   static async searchUsers(regexParam) {

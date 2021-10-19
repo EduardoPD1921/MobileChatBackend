@@ -7,7 +7,6 @@ router.post('/store', controller.store);
 router.get('/checkEmailExists/:email', controller.checkEmailExists);
 router.get('/checkUniquePhone/:phone', controller.checkUniquePhone);
 router.post('/tryAuth', controller.tryAuth);
-router.get('/decodeAuthToken', authMiddleware, controller.decodeAuthToken);
 router.get('/searchUsers/:userParams', authMiddleware, controller.searchUsers);
 router.put('/sendContactInvite', authMiddleware, controller.sendAddContactInvite);
 router.put('/cancelContactInvite', authMiddleware, controller.cancelAddContactInvite);

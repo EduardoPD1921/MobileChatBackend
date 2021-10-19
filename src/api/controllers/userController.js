@@ -45,8 +45,8 @@ exports.checkUniquePhone = async (req, res, _next) => {
 
 exports.tryAuth = async (req, res, _next) => {
   try {
-    const userToken = await User.tryAuth(req.body.email, req.body.password);
-    res.status(200).send({ message: 'user-authenticated', token: userToken }); 
+    const query = await User.tryAuth(req.body.email, req.body.password);
+    res.status(200).send({ message: 'user-authenticated', token: query.token, userInfo: query.userInfo }); 
   } catch (error) {
     res.status(400).send({ message: error.message });
   }
@@ -60,15 +60,6 @@ exports.searchUsers = async (req, res, _next) => {
     res.status(200).send(searchedUsers);
   } catch (error) {
     res.status(500).send({ message: error.message });
-  }
-};
-
-exports.decodeAuthToken = async (_req, res, _next) => {
-  try {
-    const decodedToken = User.decodeAuthToken(res.locals.token);
-    res.status(200).send({ userInfo: decodedToken });
-  } catch (error) {
-    res.status(403).send({ message: error.message });
   }
 };
 
