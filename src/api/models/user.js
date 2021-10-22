@@ -104,6 +104,8 @@ class User {
           notifications: [{
             notificationType: 'addContactInvite',
             senderId: decodedToken.id,
+            senderName: decodedToken.name,
+            senderEmail: decodedToken.email,
             receiverId: receiverId
           }]
         }
@@ -126,6 +128,15 @@ class User {
       return query;
     } catch (error) {
       throw new Error('cancel-invite-error');
+    }
+  }
+
+  static async getUserNotifications(userId) {
+    try {
+      const userNotifications = await this.findById(userId, 'notifications');
+      return userNotifications;
+    } catch (error) {
+      throw new Error('get-user-notifications-error');
     }
   }
 };
@@ -189,6 +200,15 @@ const userSchema = new mongoose.Schema({
     senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      required: true
+    },
+    senderName: {
+      type: String,
+      required: true
+    },
+    senderEmail: {
+      type: String,
+      trim: true,
       required: true
     },
     receiverId: {
