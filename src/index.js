@@ -2,7 +2,8 @@ const app = require('./api/app');
 const http = require('http');
 const path = require('path');
 const { Server } = require('socket.io');
-const handlers = require('./api/sockets/chatHandlers');
+// const handlers = require('./api/sockets/chatHandlers');
+const notificationHandlers = require('./api/sockets/notificationHandlers');
 require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 
 const port = process.env.PORT || '8000';
@@ -17,7 +18,7 @@ server.on('listening', onListening);
 const io = new Server(server);
 
 const onConnection = (socket) => {
-  handlers(io, socket);
+  notificationHandlers(io, socket);
 };
 
 io.on('connection', onConnection);
