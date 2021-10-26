@@ -95,17 +95,15 @@ class User {
     }
   }
 
-  static async sendContactInvite(token, receiverId) {
+  static async sendContactInvite(senderInfo, receiverId) {
     try {
-      const decodedToken = JwtService.decodeToken(token);
-
       const query = await this.findByIdAndUpdate(receiverId, {
         $addToSet: {
           notifications: [{
             notificationType: 'addContactInvite',
-            senderId: decodedToken.id,
-            senderName: decodedToken.name,
-            senderEmail: decodedToken.email,
+            senderId: senderInfo.id,
+            senderName: senderInfo.name,
+            senderEmail: senderInfo.email,
             receiverId: receiverId
           }]
         }
