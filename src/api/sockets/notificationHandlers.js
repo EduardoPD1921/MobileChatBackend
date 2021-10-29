@@ -27,9 +27,20 @@ module.exports = (io, socket) => {
         return true;
       }
     });
-    console.log(receiverConnection[0]);
-    socket.emit('getSendedNotificationInvite', notification);
+
+    socket.emit('getSendedNotificationInvite', notification, receiverId);
     socket.to(receiverConnection[0].socketId).emit('contactInviteReceived', notification);
+  };
+
+  async function cancelContactInvite(senderInfo, receiverId) {
+    const query = await User.cancelContactInvite(senderInfo, receiverId);
+    const canceledConnection = currentConnectedUsers.filter(user => {
+      if (user.id === receiverId) {
+        return true;
+      }
+    });
+
+    socket.to(canceledConnection[0].socketId).emit('contactInviteCanceled', query);
   };
 
   function onUserDisconnected() {
@@ -41,5 +52,6 @@ module.exports = (io, socket) => {
 
   socket.on('userConnected', onUserConnected);
   socket.on('sendContactInvite', sendContactInvite);
+  socket.on('cancelContactInvite', cancelContactInvite);
   socket.on('disconnect', onUserDisconnected);
 };

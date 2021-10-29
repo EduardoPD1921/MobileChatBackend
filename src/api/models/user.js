@@ -115,12 +115,10 @@ class User {
     }
   }
 
-  static async cancelContactInvite(receiverId, senderToken) {
+  static async cancelContactInvite(senderInfo, receiverId) {
     try {
-      const decodedToken = JwtService.decodeToken(senderToken);
-
       const query = await this.findByIdAndUpdate(receiverId, {
-        $pull: { notifications: { senderId: decodedToken.id } }
+        $pull: { notifications: { senderId: senderInfo.id } }
       }, { returnOriginal: false });
 
       return query;
