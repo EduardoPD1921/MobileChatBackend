@@ -21,15 +21,15 @@ module.exports = (io, socket) => {
   };
 
   async function sendContactInvite(senderInfo, receiverId) {
-    const notification = await User.sendContactInvite(senderInfo, receiverId);
+    const query = await User.sendContactInvite(senderInfo, receiverId);
     const receiverConnection = currentConnectedUsers.filter(user => {
       if (user.id === receiverId) {
         return true;
       }
     });
 
-    socket.emit('getSendedNotificationInvite', notification, receiverId);
-    socket.to(receiverConnection[0].socketId).emit('contactInviteReceived', notification);
+    socket.emit('getSendedNotificationInvite', query, receiverId);
+    socket.to(receiverConnection[0].socketId).emit('contactInviteReceived', query);
   };
 
   async function cancelContactInvite(senderInfo, receiverId) {

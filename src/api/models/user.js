@@ -109,7 +109,7 @@ class User {
         }
       }, { returnOriginal: false });
 
-      return query.notifications[query.notifications.length - 1];
+      return query;
     } catch (error) {
       throw new Error('invite-error');
     }
