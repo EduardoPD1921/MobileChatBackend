@@ -104,6 +104,7 @@ class User {
             senderId: senderInfo.id,
             senderName: senderInfo.name,
             senderEmail: senderInfo.email,
+            senderPhone: senderInfo.phone,
             receiverId: receiverId
           }]
         }
@@ -124,6 +125,28 @@ class User {
       return query;
     } catch (error) {
       throw new Error('cancel-invite-error');
+    }
+  }
+
+  static async acceptContactInvite(userToken, contactInfo) {
+    try {
+      const decodedToken = JwtService.decodeToken(userToken);
+      const query = await this.findByIdAndUpdate(decodedToken.id, {
+        $addToSet: {
+          contacts: [{
+            _id: contactInfo.id,
+            name: contactInfo.name,
+            email: contactInfo.email,
+            phone: contactInfo.phone
+          }]
+        }
+      }, { returnOriginal: false });
+      
+      const updatedNotifications = await this.cancelContactInvite(contactInfo, decodedToken.id);
+
+      return updatedNotifications;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 
@@ -203,6 +226,11 @@ const userSchema = new mongoose.Schema({
       required: true
     },
     senderEmail: {
+      type: String,
+      trim: true,
+      required: true
+    },
+    senderPhone: {
       type: String,
       trim: true,
       required: true

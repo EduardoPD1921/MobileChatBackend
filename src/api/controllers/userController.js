@@ -63,19 +63,11 @@ exports.searchUsers = async (req, res, _next) => {
   }
 };
 
-exports.sendAddContactInvite = async (req, res, _next) => {
+exports.acceptContactInvite = async (req, res, _next) => {
   try {
-    const notification = await User.sendContactInvite(res.locals.token, req.body.receiverId);
-    res.status(200).send({ notification });
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
-
-exports.cancelAddContactInvite = async (req, res, _next) => {
-  try {
-    const cancelInvite = await User.cancelContactInvite(req.body.receiverId, res.locals.token);
-    res.status(200).send(cancelInvite);
+    console.log(req.body.contactInfo);
+    const updatedNotifications = await User.acceptContactInvite(res.locals.token, req.body.contactInfo);
+    res.status(200).send(updatedNotifications);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
