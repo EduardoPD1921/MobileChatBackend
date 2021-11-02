@@ -128,10 +128,9 @@ class User {
     }
   }
 
-  static async acceptContactInvite(userToken, contactInfo) {
+  static async acceptContactInvite(authUserInfo, contactInfo) {
     try {
-      const decodedToken = JwtService.decodeToken(userToken);
-      const query = await this.findByIdAndUpdate(decodedToken.id, {
+      const authUserQuery = await this.findByIdAndUpdate(authUserInfo.id, {
         $addToSet: {
           contacts: [{
             _id: contactInfo.id,
@@ -141,8 +140,19 @@ class User {
           }]
         }
       }, { returnOriginal: false });
-      
-      const updatedNotifications = await this.cancelContactInvite(contactInfo, decodedToken.id);
+
+      const contactUserQuery = await this.findByIdAndUpdate(contactInfo.id, {
+        $addToSet: {
+          contacts: [{
+            _id: authUserInfo.id,
+            name: authUserInfo.name,
+            email: authUserInfo.email,
+            phone: authUserInfo.phone
+          }]
+        }
+      }, { returnOriginal: false });
+
+      const updatedNotifications = await this.cancelContactInvite(contactInfo, authUserInfo.id);
 
       return updatedNotifications;
     } catch (error) {
@@ -158,6 +168,17 @@ class User {
       throw new Error('get-user-notifications-error');
     }
   }
+
+  static async getUserContacts(authToken) {
+    try {
+      const decodedToken = JwtService.decodeToken(authToken);
+      const userContacts = await this.findById(decodedToken.id, 'contacts');
+
+      return userContacts;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
 };
 
 const userSchema = new mongoose.Schema({

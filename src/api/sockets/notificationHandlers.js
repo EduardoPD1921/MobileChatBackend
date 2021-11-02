@@ -43,6 +43,12 @@ module.exports = (io, socket) => {
     socket.to(canceledConnection[0].socketId).emit('contactInviteCanceled', query);
   };
 
+  async function acceptContactInvite(authUserInfo, contactInfo) {
+    const updatedNotifications = await User.acceptContactInvite(authUserInfo, contactInfo);
+
+    socket.emit('getUpdatedNotificationList', updatedNotifications);
+  };
+
   function onUserDisconnected() {
     const userIndex = currentConnectedUsers.findIndex(user => user.socketId === socket.id);
     currentConnectedUsers.splice(userIndex, 1);
@@ -53,5 +59,6 @@ module.exports = (io, socket) => {
   socket.on('userConnected', onUserConnected);
   socket.on('sendContactInvite', sendContactInvite);
   socket.on('cancelContactInvite', cancelContactInvite);
+  socket.on('acceptContactInvite', acceptContactInvite);
   socket.on('disconnect', onUserDisconnected);
 };

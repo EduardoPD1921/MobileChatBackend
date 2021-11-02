@@ -63,20 +63,19 @@ exports.searchUsers = async (req, res, _next) => {
   }
 };
 
-exports.acceptContactInvite = async (req, res, _next) => {
+exports.getUserNotifications = async (req, res, _next) => {
   try {
-    console.log(req.body.contactInfo);
-    const updatedNotifications = await User.acceptContactInvite(res.locals.token, req.body.contactInfo);
-    res.status(200).send(updatedNotifications);
+    const userNotifications = await User.getUserNotifications(req.params.id);
+    res.status(200).send(userNotifications);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
 };
 
-exports.getUserNotifications = async (req, res, _next) => {
+exports.getUserContacts = async (_req, res, _next) => {
   try {
-    const userNotifications = await User.getUserNotifications(req.params.id);
-    res.status(200).send(userNotifications);
+    const userContacts = await User.getUserContacts(res.locals.token);
+    res.status(200).send(userContacts);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }

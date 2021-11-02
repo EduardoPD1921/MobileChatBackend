@@ -8,7 +8,7 @@ router.get('/checkEmailExists/:email', controller.checkEmailExists);
 router.get('/checkUniquePhone/:phone', controller.checkUniquePhone);
 router.post('/tryAuth', controller.tryAuth);
 router.get('/searchUsers/:userParams', authMiddleware, controller.searchUsers);
-router.put('/acceptContactInvite', authMiddleware, controller.acceptContactInvite);
 router.get('/getUserNotifications/:id', controller.getUserNotifications);
+router.get('/getUserContacts', authMiddleware, controller.getUserContacts);
 
 module.exports = router;
