@@ -44,9 +44,15 @@ module.exports = (io, socket) => {
   };
 
   async function acceptContactInvite(authUserInfo, contactInfo) {
-    const updatedNotifications = await User.acceptContactInvite(authUserInfo, contactInfo);
+    const updatedInfo = await User.acceptContactInvite(authUserInfo, contactInfo);
+    const contactUserConnection = currentConnectedUsers.filter(user => {
+      if (user.id === contactInfo.id) {
+        return true;
+      }
+    });
 
-    socket.emit('getUpdatedNotificationList', updatedNotifications);
+    socket.emit('getUpdatedNotificationList', updatedInfo.updatedNotifications);
+    socket.to(contactUserConnection[0].socketId).emit('getUpdatedContacts', updatedInfo.contactUser);
   };
 
   function onUserDisconnected() {

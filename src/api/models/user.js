@@ -141,7 +141,7 @@ class User {
         }
       }, { returnOriginal: false });
 
-      const contactUserQuery = await this.findByIdAndUpdate(contactInfo.id, {
+      const contactUser = await this.findByIdAndUpdate(contactInfo.id, {
         $addToSet: {
           contacts: [{
             _id: authUserInfo.id,
@@ -154,7 +154,7 @@ class User {
 
       const updatedNotifications = await this.cancelContactInvite(contactInfo, authUserInfo.id);
 
-      return updatedNotifications;
+      return { updatedNotifications, contactUser };
     } catch (error) {
       throw new Error(error);
     }
