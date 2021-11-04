@@ -80,3 +80,12 @@ exports.getUserContacts = async (_req, res, _next) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+exports.cancelInvite = async (req, res, _next) => {
+  try {
+    const updatedUserNotifications = await User.cancelContactInvite(req.body.senderInfo, req.body.receiverId);
+    res.status(200).send(updatedUserNotifications);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
