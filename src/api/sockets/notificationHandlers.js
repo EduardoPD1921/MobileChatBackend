@@ -28,8 +28,8 @@ module.exports = (io, socket) => {
       }
     });
 
-    socket.emit('getSendedNotificationInvite', query, receiverId);
-    socket.to(receiverConnection[0].socketId).emit('contactInviteReceived', query);
+    socket.emit('getSendedNotificationInvite', query.updatedNotifications, receiverId);
+    socket.to(receiverConnection[0].socketId).emit('contactInviteReceived', query.updatedNotifications, query.sender);
   };
 
   async function cancelContactInvite(senderInfo, receiverId) {
