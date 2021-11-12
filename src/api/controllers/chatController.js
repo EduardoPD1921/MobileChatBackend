@@ -1,0 +1,16 @@
+const db = require('../db/connection');
+const Chat = db.model('Chat');
+
+exports.store = async (req, res, _next) => {
+  try {
+    const chat = new Chat({
+      chatType: 'chat',
+      chatUsers: req.body.chatUsers
+    });
+    await chat.save();
+
+    res.status(201).send(chat._id);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
