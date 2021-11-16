@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const JwtService = require('../services/JwtService');
 
 class Chat {
   set chatType(chatType) {
@@ -15,6 +16,17 @@ class Chat {
 
   get getChatUsers() {
     return this.users;
+  }
+
+  static async getUserChats(token) {
+    try {
+      const decodedToken = JwtService.decodeToken(token);
+      const chats = await this.find({ "users._id": decodedToken.id });
+  
+      return chats;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 };
 
@@ -36,7 +48,9 @@ const chatSchema = new mongoose.Schema({
     },
     email: {
       type: String,
-      trim: true
+      trim: true,
+      lowercase: true,
+      required: true
     },
     phone: {
       type: String,

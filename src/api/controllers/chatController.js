@@ -14,3 +14,12 @@ exports.store = async (req, res, _next) => {
     res.status(500).send(error.message);
   }
 };
+
+exports.getUserChats = async (req, res, _next) => {
+  try {
+    const chats = await Chat.getUserChats(res.locals.token);
+    res.status(200).send(chats);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
