@@ -15,7 +15,7 @@ exports.store = async (req, res, _next) => {
     await user.save();
     res.status(201).send('user-created');
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send({ message: error.message });
   }
 }; 
 
