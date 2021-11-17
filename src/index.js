@@ -1,10 +1,9 @@
 const app = require('./api/app');
 const http = require('http');
-const path = require('path');
+// const path = require('path');
 const { Server } = require('socket.io');
-// const handlers = require('./api/sockets/chatHandlers');
 const notificationHandlers = require('./api/sockets/notificationHandlers');
-require('dotenv').config({ path: path.resolve(__dirname, './.env') });
+// require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 
 const port = process.env.PORT || '8000';
 app.set('port', port);
