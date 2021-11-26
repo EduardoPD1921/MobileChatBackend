@@ -178,7 +178,23 @@ class User {
     } catch (error) {
       throw new Error(error);
     }
-  };
+  }
+
+  static async deleteContact(authToken, contactId) {
+    try {
+      const decodedToken = JwtService.decodeToken(authToken);
+      const authUserQuery = await this.findByIdAndUpdate(decodedToken.id, {
+        $pull: { contacts: { _id: contactId } }
+      }, { returnOriginal: false });
+      const contactUserQuery = await this.findByIdAndUpdate(contactId, {
+        $pull: { contacts: { _id: decodedToken.id } }
+      });
+
+      return authUserQuery;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 };
 
 const userSchema = new mongoose.Schema({

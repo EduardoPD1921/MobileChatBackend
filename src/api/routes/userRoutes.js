@@ -11,5 +11,6 @@ router.get('/searchUsers/:userParams', authMiddleware, controller.searchUsers);
 router.get('/getUserNotifications/:id', controller.getUserNotifications);
 router.get('/getUserContacts', authMiddleware, controller.getUserContacts);
 router.put('/cancelInvite', authMiddleware, controller.cancelInvite);
+router.put('/deleteContact', authMiddleware, controller.deleteContact);
 
 module.exports = router;
