@@ -89,3 +89,12 @@ exports.cancelInvite = async (req, res, _next) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+exports.deleteContact = async (req, res, _next) => {
+  try {
+    const updatedUserContacts = await User.deleteContact(res.locals.token, req.body.contactId);
+    res.status(200).send(updatedUserContacts);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
