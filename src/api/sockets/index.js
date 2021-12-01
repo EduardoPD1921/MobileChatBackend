@@ -1,5 +1,6 @@
 const db = require('../db/connection');
 const User = db.model('User');
+const Chat = db.model('Chat');
 
 const currentConnectedUsers = [];
 
@@ -55,6 +56,16 @@ module.exports = (io, socket) => {
     socket.to(contactUserConnection[0].socketId).emit('getUpdatedContacts', updatedInfo.contactUser);
   };
 
+  async function createChat(chatUsers) {
+    const chat = new Chat({
+      chatType: 'chat',
+      chatUsers
+    });
+    await chat.save();
+
+    socket.emit('sendUserNewChat', chat);
+  };
+
   function onUserDisconnected() {
     const userIndex = currentConnectedUsers.findIndex(user => user.socketId === socket.id);
     currentConnectedUsers.splice(userIndex, 1);
@@ -66,5 +77,6 @@ module.exports = (io, socket) => {
   socket.on('sendContactInvite', sendContactInvite);
   socket.on('cancelContactInvite', cancelContactInvite);
   socket.on('acceptContactInvite', acceptContactInvite);
+  socket.on('createChat', createChat);
   socket.on('disconnect', onUserDisconnected);
 };
