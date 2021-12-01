@@ -36,6 +36,11 @@ const chatSchema = new mongoose.Schema({
     enum: ['chat', 'group'],
     required: true
   },
+  visualizationStatus: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   users: [{
     _id: {
       type: mongoose.Schema.Types.ObjectId,

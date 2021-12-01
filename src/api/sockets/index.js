@@ -56,7 +56,7 @@ module.exports = (io, socket) => {
     socket.to(contactUserConnection[0].socketId).emit('getUpdatedContacts', updatedInfo.contactUser);
   };
 
-  async function createChat(chatUsers, contactId) {
+  async function createChat(chatUsers, contactId, contactName) {
     const chat = new Chat({
       chatType: 'chat',
       chatUsers
@@ -70,10 +70,10 @@ module.exports = (io, socket) => {
     });
 
     if (contactUserConnection[0]) {
-      socket.to(contactUserConnection[0].socketId).emit('sendUserNewChat', chat);
+      socket.to(contactUserConnection[0].socketId).emit('getNewChat', chat, contactName);
     }
 
-    socket.emit('sendUserNewChat', chat);
+    socket.emit('getCreatedChat', chat);
   };
 
   function onUserDisconnected() {
