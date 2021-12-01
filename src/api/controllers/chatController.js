@@ -9,7 +9,7 @@ exports.store = async (req, res, _next) => {
     });
     await chat.save();
 
-    res.status(201).send(chat._id);
+    res.status(201).send(chat);
   } catch (error) {
     res.status(500).send(error.message);
   }
