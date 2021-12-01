@@ -56,12 +56,22 @@ module.exports = (io, socket) => {
     socket.to(contactUserConnection[0].socketId).emit('getUpdatedContacts', updatedInfo.contactUser);
   };
 
-  async function createChat(chatUsers) {
+  async function createChat(chatUsers, contactId) {
     const chat = new Chat({
       chatType: 'chat',
       chatUsers
     });
     await chat.save();
+
+    const contactUserConnection = currentConnectedUsers.filter(user => {
+      if (user.id === contactId) {
+        return true;
+      }
+    });
+
+    if (contactUserConnection[0]) {
+      socket.to(contactUserConnection[0].socketId).emit('sendUserNewChat', chat);
+    }
 
     socket.emit('sendUserNewChat', chat);
   };
